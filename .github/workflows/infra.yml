@@ -1,0 +1,28 @@
+name: Digger CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ closed, opened, synchronize, reopened ]
+  issue_comment:
+    types: [created]
+    if: contains(github.event.comment.body, 'digger')
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: digger run ${{github.event.inputs.id}}
+        run: echo digger run ${{ inputs.id }}
+        shell: bash      
+      - uses: actions/checkout@v4
+      - uses: diggerhq/digger@v0.4.17
+        with:
+          setup-azure: true
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
