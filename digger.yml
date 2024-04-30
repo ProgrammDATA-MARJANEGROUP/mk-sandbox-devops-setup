@@ -1,0 +1,3 @@
+projects:
+- name: dummy-project
+  dir: dummytf
