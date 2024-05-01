@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout Pull Request
+        if: github.event_name == 'issue_comment'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -27,6 +28,7 @@ jobs:
           PR_NUM=${PR_URL##*/}
           echo "Checking out from PR #$PR_NUM based on URL: $PR_URL"
           hub pr checkout $PR_NUM
+      - name: Run Digger Action
         if: github.event_name == 'issue_comment'
         uses: diggerhq/digger@v0.4.20
         with:
@@ -44,4 +46,3 @@ jobs:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-         
