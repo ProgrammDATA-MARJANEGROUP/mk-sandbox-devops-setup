@@ -7,21 +7,20 @@ projects:
 workflows:
   dummy_workflow:
     env_vars:
-        - name: TF_VAR_azure_client_id
-          value_from: AZURE_CLIENT_ID
-        - name: TF_VAR_azure_tenant_id
-          value_from: AZURE_TENANT_ID
-        - name: TF_VAR_azure_subscription_id
-          value_from: AZURE_SUBSCRIPTION_ID
-      commands:
-        - name: TF_VAR_azure_client_id
-          value_from: AZURE_CLIENT_ID
-        - name: TF_VAR_azure_tenant_id
-          value_from: AZURE_TENANT_ID
-        - name: TF_VAR_azure_subscription_id
-          value_from: AZURE_SUBSCRIPTION_ID
+      - name: TF_VAR_azure_client_id
+        value_from: AZURE_CLIENT_ID
+      - name: TF_VAR_azure_tenant_id
+        value_from: AZURE_TENANT_ID
+      - name: TF_VAR_azure_subscription_id
+        value_from: AZURE_SUBSCRIPTION_ID
+    commands:
+      - name: TF_VAR_azure_client_id
+        value_from: AZURE_CLIENT_ID
+      - name: TF_VAR_azure_tenant_id
+        value_from: AZURE_TENANT_ID
+      - name: TF_VAR_azure_subscription_id
+        value_from: AZURE_SUBSCRIPTION_ID
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
-      on_commit_to_default: [digger unlock]
-
+      on_commit_to_default: ["digger unlock"]
