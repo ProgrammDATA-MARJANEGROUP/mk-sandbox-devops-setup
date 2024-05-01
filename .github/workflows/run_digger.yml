@@ -33,9 +33,9 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           LOCK_PROVIDER: azure
-          DIGGER_AZURE_AUTH_METHOD: CONNECTION_STRING
-          DIGGER_AZURE_CONNECTION_STRING: ${{ secrets.DIGGER_AZURE_CONNECTION_STRING }}
+          # DIGGER_AZURE_AUTH_METHOD: CONNECTION_STRING
+          # DIGGER_AZURE_CONNECTION_STRING: ${{ secrets.DIGGER_AZURE_CONNECTION_STRING }}
