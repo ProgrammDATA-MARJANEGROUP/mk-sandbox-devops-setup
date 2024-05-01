@@ -24,6 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: diggerhq/digger@v0.4.20
         with:
+          no-backend: true
           disable-locking: false
           upload-plan-destination: github
           setup-azure: true
