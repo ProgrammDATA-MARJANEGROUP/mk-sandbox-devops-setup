@@ -1,5 +1,5 @@
 auto_merge: true
-telemetry: false
+telemetry: true
 projects:
 - name: dummy_project
   dir: dummytf
@@ -24,12 +24,20 @@ workflows:
     plan:
       steps:
         - init:
-          extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
+          extra_args: [
+            "-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", 
+            "-backend-config=tenant_id=${ARM_TENANT_ID}", 
+            "-backend-config=client_id=${ARM_CLIENT_ID}"
+          ]
         - plan
     apply:
       steps:
         - init:
-          extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
+          extra_args: [
+            "-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", 
+            "-backend-config=tenant_id=${ARM_TENANT_ID}", 
+            "-backend-config=client_id=${ARM_CLIENT_ID}"
+          ]
         - apply
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
