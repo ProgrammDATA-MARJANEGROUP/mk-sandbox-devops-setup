@@ -24,12 +24,12 @@ workflows:
     plan:
       steps:
         - init:
-          extra_args: ["backend-config=./backend.hcl"]
+          extra_args: ["-backend-config=./backend.hcl"]
         - plan
     apply:
       steps:
         - init:
-          extra_args: ["backend-config=./backend.hcl"]
+          extra_args: ["-backend-config=./backend.hcl"]
         - apply
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
