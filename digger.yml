@@ -21,7 +21,24 @@ workflows:
           value_from: ARM_TENANT_ID
         - name: ARM_SUBSCRIPTION_ID
           value_from: ARM_SUBSCRIPTION_ID
-
+    plan:
+      steps:
+        - init:
+          extra_args: [
+            "backend-config=azure_client_id=${ARM_CLIENT_ID}",
+            "backend-config=azure_tenant_id=${ARM_TENANT_ID}",
+            "backend-config=azure_subscription_id=${ARM_SUBSCRIPTION_ID}"
+          ]
+        - plan
+    apply:
+      steps:
+        - init:
+          extra_args: [
+            "backend-config=azure_client_id=${ARM_CLIENT_ID}",
+            "backend-config=azure_tenant_id=${ARM_TENANT_ID}",
+            "backend-config=azure_subscription_id=${ARM_SUBSCRIPTION_ID}"
+          ]
+        - apply
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
