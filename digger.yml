@@ -3,35 +3,35 @@ telemetry: false
 projects:
 - name: dummy_project
   dir: dummytf
-  workflow: dummy_workflow
-workflows:
-  dummy_workflow:
-    env_vars:
-      state:
-        - name: ARM_CLIENT_ID
-          value_from: ARM_CLIENT_ID
-        - name: ARM_TENANT_ID
-          value_from: ARM_TENANT_ID
-        - name: ARM_SUBSCRIPTION_ID
-          value_from: ARM_SUBSCRIPTION_ID
-      commands:
-        - name: TF_VAR_azure_client_id
-          value_from: ARM_CLIENT_ID
-        - name: TF_VAR_azure_tenant_id
-          value_from: ARM_TENANT_ID
-        - name: TF_VAR_azure_subscription_id
-          value_from: ARM_SUBSCRIPTION_ID
-    plan:
-      steps:
-        - init:
-          extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
-        - plan
-    apply:
-      steps:
-        - init:
-          extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
-        - apply
-    workflow_configuration:
-      on_pull_request_pushed: ["digger plan"]
-      on_pull_request_closed: ["digger unlock"]
-      on_commit_to_default: ["digger unlock"]
+  # workflow: dummy_workflow
+# workflows:
+#   dummy_workflow:
+#     env_vars:
+#       state:
+#         - name: ARM_CLIENT_ID
+#           value_from: ARM_CLIENT_ID
+#         - name: ARM_TENANT_ID
+#           value_from: ARM_TENANT_ID
+#         - name: ARM_SUBSCRIPTION_ID
+#           value_from: ARM_SUBSCRIPTION_ID
+#       commands:
+#         - name: TF_VAR_azure_client_id
+#           value_from: ARM_CLIENT_ID
+#         - name: TF_VAR_azure_tenant_id
+#           value_from: ARM_TENANT_ID
+#         - name: TF_VAR_azure_subscription_id
+#           value_from: ARM_SUBSCRIPTION_ID
+#     plan:
+#       steps:
+#         - init:
+#           extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
+#         - plan
+#     apply:
+#       steps:
+#         - init:
+#           extra_args: ["-backend-config=subscription_id=${ARM_SUBSCRIPTION_ID}", "-backend-config=tenant_id=${ARM_TENANT_ID}", "-backend-config=client_id=${ARM_CLIENT_ID}"]
+#         - apply
+#     workflow_configuration:
+#       on_pull_request_pushed: ["digger plan"]
+#       on_pull_request_closed: ["digger unlock"]
+#       on_commit_to_default: ["digger unlock"]
