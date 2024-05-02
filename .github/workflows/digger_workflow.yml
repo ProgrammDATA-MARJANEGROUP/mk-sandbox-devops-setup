@@ -23,9 +23,14 @@ jobs:
       statuses: write      # required to validate combined PR status
     steps:     
       - uses: actions/checkout@v4
-      - uses: diggerhq/digger@v0.4.20
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+      - uses: diggerhq/digger@v0.4.21
         with:
           no-backend: false
+          configure-checkout: false
           disable-locking: false
           upload-plan-destination: github
           digger-hostname: 'https://cloud.digger.dev'
@@ -35,6 +40,8 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          setup-terraform: true
+          terraform-version: 1.8.2
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
