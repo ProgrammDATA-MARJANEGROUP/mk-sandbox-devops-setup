@@ -14,13 +14,6 @@ workflows:
           value_from: ARM_TENANT_ID
         - name: ARM_SUBSCRIPTION_ID
           value_from: ARM_SUBSCRIPTION_ID
-      commands:
-        - name: TF_VAR_azure_client_id
-          value_from: ARM_CLIENT_ID
-        - name: TF_VAR_azure_tenant_id
-          value_from: ARM_TENANT_ID
-        - name: TF_VAR_azure_subscription_id
-          value_from: ARM_SUBSCRIPTION_ID
     plan:
       steps:
         - init:
