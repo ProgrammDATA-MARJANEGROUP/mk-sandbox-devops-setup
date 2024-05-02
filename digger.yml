@@ -1,5 +1,5 @@
 auto_merge: true
-telemetry: true
+telemetry: false
 projects:
 - name: dummy_project
   dir: dummytf
@@ -30,6 +30,7 @@ workflows:
             "-backend-config=client_id=${ARM_CLIENT_ID}"
           ]
         - plan
+        - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
     apply:
       steps:
         - init:
