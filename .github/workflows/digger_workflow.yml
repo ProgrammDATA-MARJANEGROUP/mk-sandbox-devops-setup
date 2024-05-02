@@ -30,7 +30,7 @@ jobs:
           upload-plan-destination: github
           digger-hostname: 'https://cloud.digger.dev'
           digger-organisation: 'digger'
-          # digger-token: ${{ secrets.DIGGER_TOKEN }}
+          digger-token: ${{ secrets.DIGGER_TOKEN }}
           setup-azure: true
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
