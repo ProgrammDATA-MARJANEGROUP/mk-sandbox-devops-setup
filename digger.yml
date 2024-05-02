@@ -23,7 +23,7 @@ workflows:
             "-backend-config=client_id=${ARM_CLIENT_ID}"
           ]
         - plan
-        - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
+        # - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
     apply:
       steps:
         - init:
