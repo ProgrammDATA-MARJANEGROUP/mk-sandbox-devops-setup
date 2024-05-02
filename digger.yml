@@ -9,18 +9,19 @@ workflows:
     env_vars:
       state:
         - name: ARM_CLIENT_ID
-          value_from: AZURE_CLIENT_ID
-        - name: ARM_CLIENT_ID
-          value_from: AZURE_TENANT_ID
-        - name: ARM_CLIENT_ID
-          value_from: AZURE_SUBSCRIPTION_ID
+          value_from: ARM_CLIENT_ID
+        - name: ARM_TENANT_ID
+          value_from: ARM_TENANT_ID
+        - name: ARM_SUBSCRIPTION_ID
+          value_from: ARM_SUBSCRIPTION_ID
       commands:
         - name: ARM_CLIENT_ID
           value_from: ARM_CLIENT_ID
-        - name: ARM_CLIENT_ID
+        - name: ARM_TENANT_ID
           value_from: ARM_TENANT_ID
-        - name: ARM_CLIENT_ID
+        - name: ARM_SUBSCRIPTION_ID
           value_from: ARM_SUBSCRIPTION_ID
+
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
