@@ -1,33 +1,36 @@
-name: Digger CI
+name: Digger Workflow
 
 on:
-  pull_request:
-    branches: [ "main" ]
-    types: [ closed, opened, synchronize, reopened ]
-  issue_comment:
-    types: [created]
-    if: contains(github.event.comment.body, 'digger')
   workflow_dispatch:
-
-permissions:
-  pull-requests: write
-  id-token: write
-  contents: read
-  statuses: write
-
+    inputs:
+      id:
+        description: 'run identifier'
+        required: false
+      job:
+        description: 'job identifier'
+        required: true
+      comment_id:
+        description: 'comment identifier'
+        required: true
 jobs:
-  build:
+  digger-job:
     runs-on: ubuntu-latest
-    steps:
-      - name: digger run ${{github.event.inputs.id}}
-        run: echo digger run ${{ inputs.id }}
-        shell: bash      
+    permissions:
+      contents: write      # required to merge PRs
+      actions: write       # required for plan persistence
+      id-token: write      # required for workload-identity-federation
+      pull-requests: write # required to post PR comments
+      statuses: write      # required to validate combined PR status
+    steps:     
       - uses: actions/checkout@v4
       - uses: diggerhq/digger@v0.4.20
         with:
-          no-backend: true
+          no-backend: false
           disable-locking: false
           upload-plan-destination: github
+          digger-hostname: 'https://cloud.digger.dev'
+          digger-organisation: 'digger'
+          # digger-token: ${{ secrets.DIGGER_TOKEN }}
           setup-azure: true
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
