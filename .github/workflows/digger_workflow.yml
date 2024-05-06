@@ -13,7 +13,18 @@ on:
         description: 'comment identifier'
         required: true
 jobs:
+
+  code-quality-gate:
+    uses: ./.github/workflows/tf_code_quality_gate.yml
+    with:
+      ref: ${{ github.ref }}
+
   digger-job:
+    needs: code-quality-gate
+    if: |
+      needs.code-quality-gate.outputs.fmt_status == 'success' &&
+      needs.code-quality-gate.outputs.tflint_status == 'success' &&
+      needs.code-quality-gate.outputs.tfsec_status == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: write      # required to merge PRs

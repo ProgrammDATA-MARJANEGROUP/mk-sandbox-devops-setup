@@ -1,4 +1,4 @@
-name: Infracost Workflow
+name: Infracost FinOps Workflow
 
 on:
   pull_request:
@@ -30,6 +30,7 @@ jobs:
       - name: Generate Infracost cost estimate baseline
         run: |
           infracost breakdown --path=. \
+                              --config-file=infracost.yml \
                               --format=json \
                               --out-file=/tmp/infracost-base.json
 
@@ -41,6 +42,7 @@ jobs:
       - name: Generate Infracost diff
         run: |
           infracost diff --path=. \
+                          --config-file=infracost.yml \
                           --format=json \
                           --compare-to=/tmp/infracost-base.json \
                           --out-file=/tmp/infracost.json
