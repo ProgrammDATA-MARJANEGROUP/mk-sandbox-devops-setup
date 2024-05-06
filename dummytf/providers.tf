@@ -1,4 +1,5 @@
 terraform {
+
   required_providers {
 
     azurerm = {
@@ -16,7 +17,7 @@ terraform {
     resource_group_name  = "rg-mrjn-sandbox"
     storage_account_name = "mrjndevopstfstate"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    key               = "terraform.tfstate"
     use_oidc             = true
     use_azuread_auth     = true
   }
@@ -24,6 +25,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+  skip_provider_registration = true  # Deprecated attribute
 }
 
 provider "null" {}

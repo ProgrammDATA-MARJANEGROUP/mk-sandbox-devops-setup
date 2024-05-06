@@ -28,7 +28,8 @@ jobs:
 
       - name: Terraform fmt check
         id: fmt
-        run: terraform fmt -check -recursive
+        run: |
+          terraform fmt -check -recursive | tee fmt-output.txt
 
       - name: Setup caching for TFLint
         uses: actions/cache@v4
@@ -48,14 +49,26 @@ jobs:
 
       - name: Run TFLint
         id: tflint
-        run: tflint --config ./.github/tflint/.tflint.hcl -f compact
+        run: |
+          tflint --recursive --config $(realpath ./.github/tflint/.tflint.hcl) -f compact | tee tflint-output.txt
 
       - name: Run TFSec
         id: tfsec
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           github_token: ${{ github.token }}
-          tfsec_args: --config-file ./.github/tfsec/tfsec.yml
+          tfsec_args: --config-file ./.github/tfsec/tfsec.yml -o tfsec-output.txt
+
+      - name: Upload results as artifacts
+        uses: actions/upload-artifact@v4
+        if: always() && (success() || failure())
+        with:
+          name: code-quality-results
+          path: |
+            ${{ github.workspace }}/fmt-output.txt
+            ${{ github.workspace }}/tflint-output.txt
+            ${{ github.workspace }}/tfsec-output.txt
+        continue-on-error: true
 
   post-comment:
     runs-on: ubuntu-latest
@@ -63,23 +76,47 @@ jobs:
     if: always()
 
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: code-quality-results
+      
       - name: Post comment on PR
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fmt_status = '${{ needs.code-quality.outputs.fmt_status }}'
-            const tflint_status = '${{ needs.code-quality.outputs.tflint_status }}'
-            const tfsec_status = '${{ needs.code-quality.outputs.tfsec_status }}'
+            const fs = require('fs');
+            let comment = '## Code Quality Gate Results\n\n';
 
-            let comment = 'Code Quality Gate Results:\n\n'
-            comment += `- Terraform fmt: ${fmt_status}\n`
-            comment += `- TFLint: ${tflint_status}\n`
-            comment += `- TFSec: ${tfsec_status}\n`
+            const fmtOutputPath = 'fmt-output.txt';
+            const tflintOutputPath = 'tflint-output.txt';
+            const tfsecOutputPath = 'tfsec-output.txt';
+
+            if (fs.existsSync(fmtOutputPath)) {
+              const fmtOutput = fs.readFileSync(fmtOutputPath, 'utf8');
+              comment += `**Terraform fmt Output:**\n\`\`\`\n${fmtOutput}\n\`\`\`\n`;
+            } else {
+              comment += '**Terraform fmt Output:** Not Available\n';
+            }
+
+            if (fs.existsSync(tflintOutputPath)) {
+              const tflintOutput = fs.readFileSync(tflintOutputPath, 'utf8');
+              comment += `**TFLint Output:**\n\`\`\`\n${tflintOutput}\n\`\`\`\n`;
+            } else {
+              comment += '**TFLint Output:** Not Available\n';
+            }
+
+            if (fs.existsSync(tfsecOutputPath)) {
+              const tfsecOutput = fs.readFileSync(tfsecOutputPath, 'utf8');
+              comment += `**TFSec Output:**\n\`\`\`\n${tfsecOutput}\n\`\`\`\n`;
+            } else {
+              comment += '**TFSec Output:** Not Available\n';
+            }
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: comment
-              })
+            });
