@@ -1,4 +1,4 @@
 version: 0.1
 projects:
-  - path: dummytf
+  - path: ./dummytf
     name: dummy-tf
