@@ -68,7 +68,7 @@ jobs:
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           github_token: ${{ github.token }}
-          tfsec_args: --config ./.github/tfsec/tfsec.yml
+          tfsec_args: --config-file ./.github/tfsec/tfsec.yml
         continue-on-error: true
 
   post-comment:
