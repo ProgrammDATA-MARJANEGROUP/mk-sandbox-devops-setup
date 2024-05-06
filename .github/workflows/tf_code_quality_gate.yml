@@ -33,26 +33,31 @@ jobs:
 
       - name: Setup caching for TFLint
         uses: actions/cache@v4
+        if: always()
         with:
           path: ~/.tflint.d/plugins
           key: ${{ runner.os }}-tflint-${{ hashFiles('./.github/tflint/.tflint.hcl') }}
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
+        if: always()
         with:
           tflint_version: v0.51.0
 
       - name: Initialize TFLint
+        if: always()
         run: tflint --init --config ./.github/tflint/.tflint.hcl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run TFLint
+        if: always()
         id: tflint
         run: |
           tflint --recursive --config $(realpath ./.github/tflint/.tflint.hcl) -f compact > tflint-output.txt
 
       - name: Run TFSec
+        if: always()
         id: tfsec
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
