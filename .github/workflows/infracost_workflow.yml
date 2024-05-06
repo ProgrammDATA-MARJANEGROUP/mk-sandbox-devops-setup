@@ -7,33 +7,8 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  actions: read
 
 jobs:
-  check-tf-code-quality:
-    runs-on: ubuntu-latest
-    outputs:
-      status: ${{ steps.check_status.outputs.status }}
-    steps:
-      - name: Check TF Code Quality Gate Status
-        id: check_status
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const payload = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'tf_code_quality_gate.yml', // Use the actual file name or ID
-              branch: '${{ github.base_ref }}', // Use the base branch of the PR
-              event: 'pull_request'
-            });
-            const run = payload.data.workflow_runs.find(run => run.head_sha === github.event.pull_request.head.sha);
-            if (run && run.conclusion === 'success') {
-              return 'success';
-            } else {
-              return 'failure';
-            }
-
   infracost-pull-request-checks:
     needs: check-tf-code-quality
     if: needs.check-tf-code-quality.outputs.status == 'success'

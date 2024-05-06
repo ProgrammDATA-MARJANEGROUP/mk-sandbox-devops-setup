@@ -16,9 +16,9 @@ terraform {
     resource_group_name  = "rg-mrjn-sandbox"
     storage_account_name = "mrjndevopstfstate"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-    use_oidc             = true
-    use_azuread_auth     = true
+    key = "terraform.tfstate"
+    use_oidc = true
+    use_azuread_auth = true
   }
 }
 

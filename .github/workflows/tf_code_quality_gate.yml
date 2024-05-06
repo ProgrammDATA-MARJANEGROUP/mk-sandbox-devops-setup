@@ -4,12 +4,14 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   code-quality:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    continue-on-error: true
     outputs:
       fmt_status: ${{ steps.fmt.outcome }}
       tflint_status: ${{ steps.tflint.outcome }}
@@ -27,7 +29,6 @@ jobs:
       - name: Terraform fmt check
         id: fmt
         run: terraform fmt -check
-        continue-on-error: true
 
       - name: Setup caching for TFLint
         uses: actions/cache@v4
@@ -48,7 +49,6 @@ jobs:
       - name: Run TFLint
         id: tflint
         run: tflint --config ./.github/tflint/.tflint.hcl -f compact
-        continue-on-error: true
 
       - name: Run TFSec
         id: tfsec
@@ -56,7 +56,6 @@ jobs:
         with:
           github_token: ${{ github.token }}
           tfsec_args: --config-file ./.github/tfsec/tfsec.yml
-        continue-on-error: true
 
   post-comment:
     runs-on: ubuntu-latest
