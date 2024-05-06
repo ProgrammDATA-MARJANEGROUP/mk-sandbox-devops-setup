@@ -12,8 +12,15 @@ on:
       comment_id:
         description: 'comment identifier'
         required: true
-jobs:
 
+permissions:
+  contents: write      # required to merge PRs
+  actions: write       # required for plan persistence
+  id-token: write      # required for workload-identity-federation
+  pull-requests: write # required to post PR comments
+  statuses: write      # required to validate combined 
+
+jobs:
   code-quality-gate:
     uses: ./.github/workflows/tf_code_quality_gate.yml
     with:
@@ -26,12 +33,6 @@ jobs:
       needs.code-quality-gate.outputs.tflint_status == 'success' &&
       needs.code-quality-gate.outputs.tfsec_status == 'success'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write      # required to merge PRs
-      actions: write       # required for plan persistence
-      id-token: write      # required for workload-identity-federation
-      pull-requests: write # required to post PR comments
-      statuses: write      # required to validate combined PR status
     steps:     
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
