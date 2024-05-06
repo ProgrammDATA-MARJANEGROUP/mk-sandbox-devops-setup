@@ -1,21 +1,8 @@
 name: Terraform Code Quality Gate
 
 on:
-  workflow_call:
-    inputs:
-      ref:
-        required: true
-        type: string
-    outputs:
-      fmt_status:
-        description: 'Status of the Terraform fmt check'
-        value: ${{ jobs.code-quality.outputs.fmt_status }}
-      tflint_status:
-        description: 'Status of the TFLint check'
-        value: ${{ jobs.code-quality.outputs.tflint_status }}
-      tfsec_status:
-        description: 'Status of the TFSec check'
-        value: ${{ jobs.code-quality.outputs.tfsec_status }}
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   code-quality:
