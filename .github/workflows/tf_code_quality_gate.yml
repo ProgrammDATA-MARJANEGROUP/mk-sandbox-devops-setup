@@ -28,7 +28,7 @@ jobs:
 
       - name: Terraform fmt check
         id: fmt
-        run: terraform fmt -check
+        run: terraform fmt -check -recursive
 
       - name: Setup caching for TFLint
         uses: actions/cache@v4

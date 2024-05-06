@@ -10,8 +10,6 @@ permissions:
 
 jobs:
   infracost-pull-request-checks:
-    needs: check-tf-code-quality
-    if: needs.check-tf-code-quality.outputs.status == 'success'
     runs-on: ubuntu-latest
     steps:
 
