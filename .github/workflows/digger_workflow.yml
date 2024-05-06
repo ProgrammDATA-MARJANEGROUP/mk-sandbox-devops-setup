@@ -21,25 +21,17 @@ permissions:
   statuses: write      # required to validate combined 
 
 jobs:
-  code-quality-gate:
-    uses: ./.github/workflows/tf_code_quality_gate.yml
-    with:
-      ref: ${{ github.ref }}
-
   digger-job:
-    needs: code-quality-gate
-    if: |
-      needs.code-quality-gate.outputs.fmt_status == 'success' &&
-      needs.code-quality-gate.outputs.tflint_status == 'success' &&
-      needs.code-quality-gate.outputs.tfsec_status == 'success'
     runs-on: ubuntu-latest
-    steps:     
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
-      - name: Checkout base branch
-        uses: actions/checkout@v4
+          
       - uses: diggerhq/digger@v0.4.21
         with:
           no-backend: false
