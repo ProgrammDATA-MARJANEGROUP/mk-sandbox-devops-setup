@@ -63,7 +63,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
           format: default
-          additional_args: --config-file ./.github/tfsec/tfsec.yml --out tfsec-output.txt
+          additional_args: --config-file ./.github/tfsec/tfsec.yml --out tfsec-output.txt --no-color
 
       - name: Upload results as artifacts
         uses: actions/upload-artifact@v4
