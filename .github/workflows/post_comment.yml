@@ -1,4 +1,4 @@
-name: Post Quality Gate Comment
+name: Post PR Comment
 
 on:
   workflow_call:

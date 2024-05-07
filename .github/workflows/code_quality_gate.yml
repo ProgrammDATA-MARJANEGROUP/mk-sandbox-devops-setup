@@ -1,4 +1,4 @@
-name: Terraform Code Quality Gate
+name: Code Quality Gate
 
 on:
   pull_request:
