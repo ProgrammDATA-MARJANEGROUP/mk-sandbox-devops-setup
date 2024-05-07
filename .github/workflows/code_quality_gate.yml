@@ -59,13 +59,12 @@ jobs:
       - name: Run TFSec
         if: always()
         id: tfsec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
+        uses: aquasecurity/tfsec-action@v1.0.3
         with:
           github_token: ${{ github.token }}
-          tfsec_args: |
-            --config-file ./.github/tfsec/tfsec.yml
-            --out tfsec-output.txt
-            --no-color
+          config_file: ./.github/tfsec/tfsec.yml
+          out: tfsec-output.txt
+          format: default
 
       - name: Upload results as artifacts
         uses: actions/upload-artifact@v4
