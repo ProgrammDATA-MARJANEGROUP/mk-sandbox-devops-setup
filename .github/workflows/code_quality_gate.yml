@@ -62,9 +62,8 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           github_token: ${{ github.token }}
-          config_file: ./.github/tfsec/tfsec.yml
-          out: tfsec-output.txt
           format: default
+          additional_args: --config-file ./.github/tfsec/tfsec.yml --out tfsec-output.txt
 
       - name: Upload results as artifacts
         uses: actions/upload-artifact@v4
