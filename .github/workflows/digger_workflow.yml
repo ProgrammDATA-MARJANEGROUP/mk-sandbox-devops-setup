@@ -35,6 +35,7 @@ jobs:
       - uses: diggerhq/digger@v0.4.25
         with:
           configure-checkout: false
+          no-backend: false
           upload-plan-destination: github
           digger-hostname: 'https://cloud.digger.dev'
           digger-organisation: 'digger'
