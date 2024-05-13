@@ -1,4 +1,4 @@
-name: Terraform Code Quality Gate
+name: Code Quality Gate
 
 on:
   pull_request:
@@ -28,58 +28,59 @@ jobs:
 
       - name: Terraform fmt check
         id: fmt
-        run: terraform fmt -check -recursive
+        run: |
+          terraform fmt -check -recursive > fmt-output.txt
 
       - name: Setup caching for TFLint
         uses: actions/cache@v4
+        if: always()
         with:
           path: ~/.tflint.d/plugins
           key: ${{ runner.os }}-tflint-${{ hashFiles('./.github/tflint/.tflint.hcl') }}
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
+        if: always()
         with:
           tflint_version: v0.51.0
 
       - name: Initialize TFLint
+        if: always()
         run: tflint --init --config ./.github/tflint/.tflint.hcl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run TFLint
+        if: always()
         id: tflint
-        run: tflint --config ./.github/tflint/.tflint.hcl -f compact
+        run: |
+          tflint --recursive --config $(realpath ./.github/tflint/.tflint.hcl) -f compact > tflint-output.txt
 
       - name: Run TFSec
+        if: always()
         id: tfsec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
+        uses: aquasecurity/tfsec-action@v1.0.3
         with:
           github_token: ${{ github.token }}
-          tfsec_args: --config-file ./.github/tfsec/tfsec.yml
+          format: default
+          additional_args: --config-file ./.github/tfsec/tfsec.yml --out tfsec-output.txt --no-color
+
+      - name: Upload results as artifacts
+        uses: actions/upload-artifact@v4
+        if: always() && (success() || failure())
+        with:
+          name: code-quality-results
+          path: |
+            ${{ github.workspace }}/fmt-output.txt
+            ${{ github.workspace }}/tflint-output.txt
+            ${{ github.workspace }}/tfsec-output.txt
+        continue-on-error: true
 
   post-comment:
-    runs-on: ubuntu-latest
     needs: code-quality
-    if: always()
-
-    steps:
-      - name: Post comment on PR
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fmt_status = '${{ needs.code-quality.outputs.fmt_status }}'
-            const tflint_status = '${{ needs.code-quality.outputs.tflint_status }}'
-            const tfsec_status = '${{ needs.code-quality.outputs.tfsec_status }}'
-
-            let comment = 'Code Quality Gate Results:\n\n'
-            comment += `- Terraform fmt: ${fmt_status}\n`
-            comment += `- TFLint: ${tflint_status}\n`
-            comment += `- TFSec: ${tfsec_status}\n`
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-              })
+    uses: ./.github/workflows/post_comment.yml
+    with:
+      fmt_status: ${{ needs.code-quality.outputs.fmt_status }}
+      tflint_status: ${{ needs.code-quality.outputs.tflint_status }}
+      tfsec_status: ${{ needs.code-quality.outputs.tfsec_status }}
+      pr_number: ${{ github.event.pull_request.number }}

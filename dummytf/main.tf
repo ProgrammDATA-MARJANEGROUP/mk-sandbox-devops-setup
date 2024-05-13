@@ -5,6 +5,6 @@ resource "null_resource" "example" {
   }
 
   provisioner "local-exec" {
-    command = "echo 'Hello, Small World!'"
+    command = "echo 'Hello, World from workspace ${terraform.workspace}!'"
   }
 }

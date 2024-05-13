@@ -1,9 +1,16 @@
 auto_merge: true
 telemetry: false
 projects:
-- name: dummy_project
+- name: dummy_project_prod
+  # branch: /main/
   dir: dummytf
   workflow: dummy_workflow
+  workspace: prod
+- name: dummy_project_stage
+  branch: /dev/
+  dir: dummytf
+  # workflow: dummy_workflow
+  workspace: dev
 workflows:
   dummy_workflow:
     env_vars:
