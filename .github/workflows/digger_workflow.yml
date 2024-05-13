@@ -32,7 +32,7 @@ jobs:
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
           
-      - uses: diggerhq/digger@v0.4.21
+      - uses: diggerhq/digger@v0.4.25
         with:
           configure-checkout: false
           upload-plan-destination: github
