@@ -37,7 +37,7 @@ jobs:
           configure-checkout: false
           no-backend: false
           upload-plan-destination: github
-          digger-hostname: 'https://cloud.digger.dev'
+          digger-hostname: 'https://mrjn-digger-backend.azurewebsites.net/projects/'
           digger-organisation: 'digger'
           digger-token: ${{ secrets.DIGGER_TOKEN }}
           setup-terraform: true
