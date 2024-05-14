@@ -7,9 +7,9 @@ projects:
   workflow: dummy_workflow
   workspace: prod
 - name: dummy_project_stage
-  branch: /dev/
+  # branch: /dev/
   dir: dummytf
-  # workflow: dummy_workflow
+  workflow: dummy_workflow
   workspace: dev
 workflows:
   dummy_workflow:
