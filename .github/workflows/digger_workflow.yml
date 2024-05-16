@@ -13,6 +13,7 @@ on:
         description: 'comment identifier'
         required: true
 
+
 permissions:
   contents: write
   actions: write
@@ -31,11 +32,11 @@ jobs:
         uses: infracost/actions/setup@v2
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
+
           
-      - uses: diggerhq/digger@v0.4.25
+      - uses: diggerhq/digger@v0.4.28
         with:
           configure-checkout: false
-          no-backend: false
           upload-plan-destination: github
           digger-hostname: 'https://mrjn-digger-backend.azurewebsites.net/'
           digger-organisation: 'digger'
