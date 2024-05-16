@@ -5,6 +5,6 @@ resource "null_resource" "example" {
   }
 
   provisioner "local-exec" {
-    command = "echo 'Big Big World'"
+    command = "echo 'Hello World'"
   }
 }
