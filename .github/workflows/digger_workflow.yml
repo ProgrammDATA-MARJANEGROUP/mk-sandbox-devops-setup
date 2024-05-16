@@ -1,12 +1,18 @@
 name: Digger Workflow
 
 on:
-  pull_request:
-    branches: [ "main" ]
-    types: [ opened, synchronize ]
-  issue_comment:
-    types: [created]
   workflow_dispatch:
+    inputs:
+      id:
+        description: 'run identifier'
+        required: false
+      job:
+        description: 'job identifier'
+        required: true
+      comment_id:
+        description: 'comment identifier'
+        required: true
+
 
 permissions:
   contents: write
@@ -27,24 +33,14 @@ jobs:
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
 
-      - name: Checkout Pull Request
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PR_URL="${{ github.event.issue.pull_request.url }}"
-          PR_NUM=${PR_URL##*/}
-          echo "Checking out from PR #$PR_NUM based on URL: $PR_URL"
-          hub pr checkout $PR_NUM
-        if: github.event_name == 'issue_comment'
           
-      - uses: diggerhq/digger@v0.4.25
+      - uses: diggerhq/digger@v0.4.28
         with:
           configure-checkout: false
-          no-backend: true
           upload-plan-destination: github
-          # digger-hostname: 'https://mrjn-digger-backend.azurewebsites.net/'
-          # digger-organisation: 'digger'
-          # digger-token: ${{ secrets.DIGGER_TOKEN }}
+          digger-hostname: 'https://mrjn-digger-backend.azurewebsites.net/'
+          digger-organisation: 'digger'
+          digger-token: ${{ secrets.DIGGER_TOKEN }}
           setup-terraform: true
           terraform-version: 1.8.2
           setup-azure: true
